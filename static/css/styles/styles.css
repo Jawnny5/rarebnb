@@ -1,0 +1,14 @@
+.my-footer {
+  height: 3em;
+  background-color:paleturquoise;
+  margin-top: 1em;
+}
+.room-img {
+  max-width: 50%;
+}
+.redText {
+  color: red;
+}
+.datepicker {
+  z-index: 10000;
+}
