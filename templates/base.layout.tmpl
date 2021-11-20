@@ -70,10 +70,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{block "js" .}}
-
+    
     {{end}}
-
+    
     <script>
+      let attention = Prompt()
+      const elem = document.getElementById('reservation-dates');
+      const rangepicker = new DateRangePicker(elem, {
+      // ...options
+      }); 
+
       (function () {
         'use strict'
       
@@ -92,30 +98,8 @@
           })
       })()
   
-      document.getElementById("eventButton").addEventListener("click", function(){
-        let html = `
-        <form id="check-availability-form action="" method="post" novalidate class="needs-validation">
-          <div class="row">
-            <div class="col">
-              <div class="row" id="reservation-dates-modal">
-                <div class="col">
-                  <input required class="form-control" type="text" name="start" id="start" placeholder="Checking In">
-                <div/>
-                <div class="col">
-                  <input required class="form-control" type="text" name="end" id="end" placeholder="Checking Out">
-                <div/>
-              <div/>
-            <div/>
-          <div/>  
-        <form/>`
-        attention.custom({msg: html, title: "Choose Your Dates"})
-      })
       
   
-      const elem = document.getElementById('reservation-dates');
-      const rangepicker = new DateRangePicker(elem, {
-      // ...options
-      }); 
   
   
       function notify(msg, msgType){
@@ -133,7 +117,6 @@
           confirmButtonText: confirmButtonText
         })
       }
-      let attention = Prompt()
       function Prompt() {
   
         let toast = function(c){
@@ -199,6 +182,7 @@
             title: title,
             html: msg, 
             focusConfirm: false,
+            showCancelButton: true,
             willOpen: () => {
               const elem = document.getElementById('reservation-dates-modal')
               const rp = new DateRangePicker(elem, {
