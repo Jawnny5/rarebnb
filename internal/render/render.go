@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-	"rarebnb/pkg/config"
-	"rarebnb/pkg/models"
+	"rarebnb/internal/config"
+	"rarebnb/internal/models"
 
 	"github.com/justinas/nosurf"
 )

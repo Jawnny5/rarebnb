@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rarebnb/pkg/config"
-	"rarebnb/pkg/handlers"
-	"rarebnb/pkg/render"
+	"rarebnb/internal/config"
+	"rarebnb/internal/handlers"
+	"rarebnb/internal/render"
 	"time"
 
 	"github.com/alexedwards/scs/v2"

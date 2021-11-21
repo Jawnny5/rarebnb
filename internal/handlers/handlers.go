@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rarebnb/pkg/config"
-	"rarebnb/pkg/models"
-	"rarebnb/pkg/render"
+	"rarebnb/internal/config"
+	"rarebnb/internal/models"
+	"rarebnb/internal/render"
 )
 
 var Repo *Repository
