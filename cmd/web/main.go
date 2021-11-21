@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
 	"rarebnb/internal/config"
 	"rarebnb/internal/handlers"
+	"rarebnb/internal/models"
 	"rarebnb/internal/render"
 	"time"
 
@@ -19,6 +21,7 @@ var session *scs.SessionManager
 
 //main is the main application function
 func main() {
+	gob.Register(models.Reservation{})
 
 	//change this to true when in production
 	app.InProduction = false
