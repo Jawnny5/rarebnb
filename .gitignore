@@ -1,1 +1,4 @@
 .DS_store
+database.yml
+bookings
+run.sh
