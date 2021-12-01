@@ -46,7 +46,7 @@ type Reservation struct {
 	Room Room
 }
 
-type RoomRestrictions struct {
+type RoomRestriction struct {
 	ID int 
 	RoomID int
 	ReservationID int
