@@ -2,9 +2,13 @@
 
 {{define "content"}}
 <div class="container">
-  <div class="row"> 
+  <div class="row">
     <div class="col">
-      <img src="../static/images/hurtyurt.jpeg" alt="The Hurt Yurt" class="img-fluid img-thumbnail mx-auto d-block room-img">
+      <img
+        src="../static/images/hurtyurt.jpeg"
+        alt="The Hurt Yurt"
+        class="img-fluid img-thumbnail mx-auto d-block room-img"
+      />
     </div>
   </div>
   <div class="row">
@@ -15,16 +19,19 @@
   </div>
   <div class="row">
     <div class="col text-center">
-      <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+      <a id="check-availability-button" href="#!" class="btn btn-success"
+        >Check Availability</a
+      >
     </div>
   </div>
 </div>
-{{end}}
+{{ end }}
 
 {{define "js"}}
-  <script>
-
-    document.getElementById("check-availability-button").addEventListener("click", function(){
+<script>
+  document
+    .getElementById("check-availability-button")
+    .addEventListener("click", function () {
       let html = `
       <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
         <div class="row">
@@ -39,40 +46,60 @@
             <div/>
           <div/>
         <div/>  
-      <form/>`
+      <form/>`;
 
       attention.custom({
-        msg: html, 
+        msg: html,
         title: "Choose Your Dates",
 
         willOpen: () => {
-          const elem = document.getElementById('reservation-dates-modal')
+          const elem = document.getElementById("reservation-dates-modal");
           const rp = new DateRangePicker(elem, {
-             format: "mm-dd-yyyy",
-             showOnFocus: true
-          })
+            format: "mm-dd-yyyy",
+            showOnFocus: true,
+            minDate: new Date(),
+          });
         },
 
         didOpen: () => {
-          document.getElementById('start').removeAttribute('disabled')
-          document.getElementById('end').removeAttribute('disabled')
+          document.getElementById("start").removeAttribute("disabled");
+          document.getElementById("end").removeAttribute("disabled");
         },
 
-        callback: function(result) {
-          let form = document.getElementById('check-availability-form')
-          let formData = new FormData(form)
-          formData.append("csrf_token", '{{.CSRFToken}}')
+        callback: function (result) {
+          let form = document.getElementById("check-availability-form");
+          let formData = new FormData(form);
+          formData.append("csrf_token", "{{.CSRFToken}}");
+          formData.append("room_id", "1");
 
           fetch("/search-availability-json", {
             method: "POST",
             body: formData,
           })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data)
-            })
-        }
-      })
-    })
-  </script>
-{{end}}
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.ok) {
+                attention.custom({
+                  showConfirmButton: false,
+                  icon: "success",
+                  msg:
+                    "<p>Room is available!</p>" +
+                    '<p><a href="/book-room?id=' +
+                    data.room_id +
+                    "&s=" +
+                    data.start_date +
+                    "&e=" +
+                    data.end_date +
+                    '"class="btn btn-primary">Book Now!</a></p>',
+                });
+              } else {
+                attention.error({
+                  msg: "Room unavailable",
+                });
+              }
+            });
+        },
+      });
+    });
+</script>
+{{ end }}
