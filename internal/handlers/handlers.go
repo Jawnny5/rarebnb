@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"rarebnb/internal/config"
 	"rarebnb/internal/driver"
@@ -131,6 +132,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		StartDate: startDate,
 		EndDate:   endDate,
 		RoomID:    roomID,
+		Room: models.Room{},
 	}
 
 	form := forms.New(r.PostForm)
@@ -165,12 +167,47 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		RestrictionID: 1,
 	}
 
-	err = m.DB.InsertRoomRestriction(restriction)
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Unable to insert room restriction!")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
+	
+	err = m.DB.InsertRoomRestriction(restriction)
+	
+	htmlMessage := fmt.Sprintf(`
+		<strong>Reservation Confirmation</strong><br/>
+		Dear %s:, <br/>
+		This is confirmation of your reservation from %s to %s @ %s<br/>
+		We're looking forward to your stay!								
+	`, reservation.FirstName, reservation.StartDate.Format("2006-01-02"), reservation.EndDate.Format("2006-01-02"), reservation.Room.RoomName)
+
+	//Sending of confirmation email
+		msg := models.MailData {
+		To: reservation.Email,
+		From: "concierge@rbnb.com", 
+		Subject: "Reservation Confirmation",
+		Content: htmlMessage,
+		Template: "drip.html",
+	}
+
+	m.App.MailChan <- msg
+
+	htmlMessage = fmt.Sprintf(`
+		<strong>Reservation Confirmation</strong><br/>
+		This is confirmation of a reservation just made from %s to %s @ %s<br/>							
+	`, reservation.StartDate.Format("2006-01-02"), reservation.EndDate.Format("2006-01-02"), reservation.Room.RoomName)
+
+	//Sending of notification email
+		msg = models.MailData {
+		To: "concierge@rbnb.com",
+		From: "concierge@rbnb.com", 
+		Subject: "Rerservation Notification",
+		Content: htmlMessage,
+		Template: "drip.html",
+	}
+
+	m.App.MailChan <- msg
 
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 
@@ -199,7 +236,7 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 	start := r.Form.Get("start")
 	end := r.Form.Get("end")
 
-	layout := "2006-01-02"
+	layout := "01-02-2006"
 	startDate, err := time.Parse(layout, start)
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "can't parse start date!")
