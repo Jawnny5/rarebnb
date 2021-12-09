@@ -34,10 +34,20 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/admin/login", handlers.Repo.ShowLogin)
 	mux.Post("/admin/login", handlers.Repo.PostShowLogin)
+	mux.Get("/admin/logout", handlers.Repo.Logout)
 
 	//fileServer creates a means of serving static files to application
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
+
+	mux.Route("/admin", func(mux chi.Router){
+		mux.Use(Auth)
+
+		mux.Get("/dashboard", handlers.Repo.AdminDashboard)
+		mux.Get("/reservations-new", handlers.Repo.AdminNewReservations)
+		mux.Get("/reservations-all", handlers.Repo.AdminAllReservations)
+		mux.Get("/reservations-calendar", handlers.Repo.AdminReservationsCalendar)
+	})
 
 	return mux
 }
