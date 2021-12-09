@@ -9,11 +9,14 @@ import (
 	"path/filepath"
 	"rarebnb/internal/config"
 	"rarebnb/internal/models"
+	"time"
 
 	"github.com/justinas/nosurf"
 )
 
-var functions = template.FuncMap{}
+var functions = template.FuncMap{
+	"humanDate": HumanDate,
+}
 
 var app *config.AppConfig
 var pathToTemplates = "./templates"
@@ -21,6 +24,11 @@ var pathToTemplates = "./templates"
 //NewRenderer sets the config for the template package
 func NewRenderer(a *config.AppConfig) {
 	app = a
+}
+
+//HumanDate returns time in YYYY-MM-DD format.
+func HumanDate(t time.Time) string {
+	return t.Format("2006-01-02")
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
