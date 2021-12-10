@@ -30,13 +30,13 @@ New Reservations
       <tr>
         <td>{{.ID}}</td>
         <td>
-        <a href="/admin/reservations/new/{{.ID}}">
-          {{.LastName}}
-        </a>
+          <a href="/admin/reservations/new/{{.ID}}/show">
+            {{.LastName}}
+          </a>
         </td>
         <td>{{.Room.RoomName}}</td>
-        <td>{{humanDate .StartDate }}</td>
-        <td>{{humanDate .EndDate }}</td>
+        <td>{{ humanDate.StartDate }}</td>
+        <td>{{ humanDate.EndDate }}</td>
       </tr>
       {{
         end
@@ -52,10 +52,11 @@ New Reservations
   type="text/javascript"
 ></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
-  const dataTable = new simpleDatatables.DataTable("#new-res", {
-    select: 3, sort: "desc",
+  document.addEventListener("DOMContentLoaded", function () {
+    const dataTable = new simpleDatatables.DataTable("#new-res", {
+      select: 3,
+      sort: "desc",
     });
-  })
+  });
 </script>
 {{ end }}
